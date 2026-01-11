@@ -8,8 +8,10 @@ import android.app.Service;
 import android.app.usage.UsageEvents;
 import android.app.usage.UsageStats;
 import android.app.usage.UsageStatsManager;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Build;
 import android.os.Handler;
 import android.os.IBinder;
@@ -45,6 +47,9 @@ public class UsageMonitorService extends Service {
     private long accumulatedUsageMs = 0;        // 累计使用时间（毫秒）
     private long lastCheckTime = 0;             // 上次检查时间
     
+    // 广播接收器，处理提醒关闭后的重置计时
+    private BroadcastReceiver resetTimerReceiver;
+    
     public static boolean isRunning() {
         return isRunning;
     }
@@ -59,6 +64,27 @@ public class UsageMonitorService extends Service {
         preferenceManager = new PreferenceManager(this);
         
         createNotificationChannel();
+        
+        // 注册广播接收器，接收提醒关闭后的重置计时信号
+        resetTimerReceiver = new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                if (Constants.ACTION_RESET_TIMER.equals(intent.getAction()) ||
+                    Constants.ACTION_REMINDER_DISMISSED.equals(intent.getAction())) {
+                    Log.d(TAG, "收到重置计时广播");
+                    resetContinuousUsage();
+                    continuousUsageStartTime = System.currentTimeMillis();
+                }
+            }
+        };
+        IntentFilter filter = new IntentFilter();
+        filter.addAction(Constants.ACTION_RESET_TIMER);
+        filter.addAction(Constants.ACTION_REMINDER_DISMISSED);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            registerReceiver(resetTimerReceiver, filter, Context.RECEIVER_NOT_EXPORTED);
+        } else {
+            registerReceiver(resetTimerReceiver, filter);
+        }
         
         monitorRunnable = new Runnable() {
             @Override
@@ -96,6 +122,15 @@ public class UsageMonitorService extends Service {
 
         isRunning = false;
         handler.removeCallbacks(monitorRunnable);
+        
+        // 注销广播接收器
+        if (resetTimerReceiver != null) {
+            try {
+                unregisterReceiver(resetTimerReceiver);
+            } catch (Exception e) {
+                Log.e(TAG, "注销广播接收器失败: " + e.getMessage());
+            }
+        }
     }
     
     @Nullable
@@ -236,14 +271,65 @@ public class UsageMonitorService extends Service {
             
             if (statsMap != null) {
                 long totalUsageMs = 0;
-                List<String> monitoredPackages = getMonitoredPackages();
                 
-                for (String packageName : monitoredPackages) {
+                // 抖音使用时长
+                long douyinUsageMs = 0;
+                for (String packageName : Constants.DOUYIN_PACKAGES) {
                     UsageStats stats = statsMap.get(packageName);
                     if (stats != null) {
-                        totalUsageMs += stats.getTotalTimeInForeground();
-                        Log.d(TAG, packageName + " 今日使用: " + (stats.getTotalTimeInForeground() / 60000) + " 分钟");
+                        douyinUsageMs += stats.getTotalTimeInForeground();
                     }
+                }
+                int douyinMinutes = (int) (douyinUsageMs / 60000);
+                preferenceManager.setDouyinUsageTime(douyinMinutes);
+                Log.d(TAG, "抖音今日使用: " + douyinMinutes + " 分钟");
+                if (preferenceManager.isAppMonitored(Constants.PREF_MONITOR_DOUYIN)) {
+                    totalUsageMs += douyinUsageMs;
+                }
+                
+                // 快手使用时长
+                long kuaishouUsageMs = 0;
+                for (String packageName : Constants.KUAISHOU_PACKAGES) {
+                    UsageStats stats = statsMap.get(packageName);
+                    if (stats != null) {
+                        kuaishouUsageMs += stats.getTotalTimeInForeground();
+                    }
+                }
+                int kuaishouMinutes = (int) (kuaishouUsageMs / 60000);
+                preferenceManager.setKuaishouUsageTime(kuaishouMinutes);
+                Log.d(TAG, "快手今日使用: " + kuaishouMinutes + " 分钟");
+                if (preferenceManager.isAppMonitored(Constants.PREF_MONITOR_KUAISHOU)) {
+                    totalUsageMs += kuaishouUsageMs;
+                }
+                
+                // 小红书使用时长
+                long xiaohongshuUsageMs = 0;
+                for (String packageName : Constants.XIAOHONGSHU_PACKAGES) {
+                    UsageStats stats = statsMap.get(packageName);
+                    if (stats != null) {
+                        xiaohongshuUsageMs += stats.getTotalTimeInForeground();
+                    }
+                }
+                int xiaohongshuMinutes = (int) (xiaohongshuUsageMs / 60000);
+                preferenceManager.setXiaohongshuUsageTime(xiaohongshuMinutes);
+                Log.d(TAG, "小红书今日使用: " + xiaohongshuMinutes + " 分钟");
+                if (preferenceManager.isAppMonitored(Constants.PREF_MONITOR_XIAOHONGSHU)) {
+                    totalUsageMs += xiaohongshuUsageMs;
+                }
+                
+                // 微信使用时长
+                long wechatUsageMs = 0;
+                for (String packageName : Constants.WECHAT_PACKAGES) {
+                    UsageStats stats = statsMap.get(packageName);
+                    if (stats != null) {
+                        wechatUsageMs += stats.getTotalTimeInForeground();
+                    }
+                }
+                int wechatMinutes = (int) (wechatUsageMs / 60000);
+                preferenceManager.setWechatUsageTime(wechatMinutes);
+                Log.d(TAG, "微信今日使用: " + wechatMinutes + " 分钟");
+                if (preferenceManager.isAppMonitored(Constants.PREF_MONITOR_WECHAT)) {
+                    totalUsageMs += wechatUsageMs;
                 }
                 
                 int totalMinutes = (int) (totalUsageMs / 60000);

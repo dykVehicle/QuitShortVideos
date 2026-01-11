@@ -7,6 +7,7 @@ import android.os.Build;
 import android.os.IBinder;
 import android.os.Vibrator;
 import android.provider.Settings;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -17,8 +18,11 @@ import android.widget.TextView;
 import androidx.annotation.Nullable;
 
 import com.screentime.guardian.R;
+import com.screentime.guardian.util.Constants;
 
 public class OverlayService extends Service {
+    
+    private static final String TAG = "OverlayService";
 
     private WindowManager windowManager;
     private View overlayView;
@@ -81,6 +85,11 @@ public class OverlayService extends Service {
         Button btnContinue = overlayView.findViewById(R.id.btnContinue);
 
         btnTakeBreak.setOnClickListener(v -> {
+            Log.d(TAG, "用户点击休息按钮");
+            
+            // 发送广播重置计时
+            sendResetTimerBroadcast();
+            
             // 返回桌面
             Intent homeIntent = new Intent(Intent.ACTION_MAIN);
             homeIntent.addCategory(Intent.CATEGORY_HOME);
@@ -92,6 +101,11 @@ public class OverlayService extends Service {
         });
 
         btnContinue.setOnClickListener(v -> {
+            Log.d(TAG, "用户点击继续使用按钮");
+            
+            // 发送广播重置计时
+            sendResetTimerBroadcast();
+            
             removeOverlay();
             stopSelf();
         });
@@ -136,5 +150,15 @@ public class OverlayService extends Service {
             }
             overlayView = null;
         }
+    }
+    
+    /**
+     * 发送广播通知 UsageMonitorService 重置计时
+     */
+    private void sendResetTimerBroadcast() {
+        Log.d(TAG, "发送重置计时广播");
+        Intent resetIntent = new Intent(Constants.ACTION_REMINDER_DISMISSED);
+        resetIntent.setPackage(getPackageName());
+        sendBroadcast(resetIntent);
     }
 }

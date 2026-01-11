@@ -198,14 +198,29 @@
                         android:src="@drawable/ic_video"
                         app:tint="@color/error" />
 
-                    <TextView
+                    <LinearLayout
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:layout_marginStart="12dp"
-                        android:text="@string/douyin"
-                        android:textSize="16sp"
-                        android:textColor="@color/text_primary" />
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/douyin"
+                            android:textSize="16sp"
+                            android:textColor="@color/text_primary" />
+
+                        <TextView
+                            android:id="@+id/douyinUsageTime"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/usage_time_default"
+                            android:textSize="12sp"
+                            android:textColor="@color/text_secondary" />
+
+                    </LinearLayout>
 
                     <com.google.android.material.materialswitch.MaterialSwitch
                         android:id="@+id/switchDouyin"
@@ -229,14 +244,29 @@
                         android:src="@drawable/ic_video"
                         app:tint="@color/warning" />
 
-                    <TextView
+                    <LinearLayout
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:layout_marginStart="12dp"
-                        android:text="@string/kuaishou"
-                        android:textSize="16sp"
-                        android:textColor="@color/text_primary" />
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/kuaishou"
+                            android:textSize="16sp"
+                            android:textColor="@color/text_primary" />
+
+                        <TextView
+                            android:id="@+id/kuaishouUsageTime"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/usage_time_default"
+                            android:textSize="12sp"
+                            android:textColor="@color/text_secondary" />
+
+                    </LinearLayout>
 
                     <com.google.android.material.materialswitch.MaterialSwitch
                         android:id="@+id/switchKuaishou"
@@ -260,14 +290,29 @@
                         android:src="@drawable/ic_video"
                         app:tint="@color/error" />
 
-                    <TextView
+                    <LinearLayout
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:layout_marginStart="12dp"
-                        android:text="@string/xiaohongshu"
-                        android:textSize="16sp"
-                        android:textColor="@color/text_primary" />
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/xiaohongshu"
+                            android:textSize="16sp"
+                            android:textColor="@color/text_primary" />
+
+                        <TextView
+                            android:id="@+id/xiaohongshuUsageTime"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/usage_time_default"
+                            android:textSize="12sp"
+                            android:textColor="@color/text_secondary" />
+
+                    </LinearLayout>
 
                     <com.google.android.material.materialswitch.MaterialSwitch
                         android:id="@+id/switchXiaohongshu"
@@ -291,14 +336,29 @@
                         android:src="@drawable/ic_video"
                         app:tint="@color/success" />
 
-                    <TextView
+                    <LinearLayout
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:layout_marginStart="12dp"
-                        android:text="@string/wechat_video"
-                        android:textSize="16sp"
-                        android:textColor="@color/text_primary" />
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/wechat_video"
+                            android:textSize="16sp"
+                            android:textColor="@color/text_primary" />
+
+                        <TextView
+                            android:id="@+id/wechatUsageTime"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/usage_time_default"
+                            android:textSize="12sp"
+                            android:textColor="@color/text_secondary" />
+
+                    </LinearLayout>
 
                     <com.google.android.material.materialswitch.MaterialSwitch
                         android:id="@+id/switchWechat"
