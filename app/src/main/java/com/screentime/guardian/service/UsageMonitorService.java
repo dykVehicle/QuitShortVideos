@@ -91,6 +91,9 @@ public class UsageMonitorService extends Service {
         super.onDestroy();
         Log.d(TAG, "Service onDestroy");
         
+        // 服务退出前刷新一次统计，避免最后一段使用时间未落盘
+        updateTodayStats();
+
         isRunning = false;
         handler.removeCallbacks(monitorRunnable);
     }
@@ -148,6 +151,9 @@ public class UsageMonitorService extends Service {
             // 不是监控的应用
             if (!currentForegroundApp.isEmpty() && isMonitoredApp(currentForegroundApp)) {
                 Log.d(TAG, "离开短视频应用: " + currentForegroundApp);
+                // 很多系统会在应用“离开前台”时才结算 UsageStats 的前台时长，
+                // 这里只在使用中更新会导致用户看完退出后仍显示 0 分钟。
+                updateTodayStats();
                 // 用户离开了短视频应用，重置连续使用计时
                 resetContinuousUsage();
             }

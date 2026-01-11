@@ -1,5 +1,7 @@
 package com.screentime.guardian;
 
+import android.app.usage.UsageStats;
+import android.app.usage.UsageStatsManager;
 import android.app.AppOpsManager;
 import android.content.Context;
 import android.content.Intent;
@@ -21,6 +23,11 @@ import com.google.android.material.slider.Slider;
 import com.screentime.guardian.service.UsageMonitorService;
 import com.screentime.guardian.util.Constants;
 import com.screentime.guardian.util.PreferenceManager;
+
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.List;
+import java.util.Map;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -188,10 +195,77 @@ public class MainActivity extends AppCompatActivity {
 
     private void updateStats() {
         int totalMinutes = preferenceManager.getTodayUsageTime();
+        int refreshedMinutes = getTodayUsageTimeFromSystem();
+        if (refreshedMinutes >= 0) {
+            totalMinutes = refreshedMinutes;
+            preferenceManager.setTodayUsageTime(totalMinutes);
+        }
         int reminderCount = preferenceManager.getTodayReminderCount();
         
         totalTimeValue.setText(String.valueOf(totalMinutes));
         reminderCountValue.setText(String.valueOf(reminderCount));
+    }
+
+    /**
+     * 从系统 UsageStats 刷新今日短视频使用时长（分钟）。
+     * @return 分钟数；如果无权限或获取失败返回 -1
+     */
+    private int getTodayUsageTimeFromSystem() {
+        if (!hasUsageStatsPermission()) {
+            return -1;
+        }
+
+        try {
+            UsageStatsManager usageStatsManager = (UsageStatsManager) getSystemService(Context.USAGE_STATS_SERVICE);
+            if (usageStatsManager == null) {
+                return -1;
+            }
+
+            // 获取今天的开始时间
+            Calendar calendar = Calendar.getInstance();
+            calendar.set(Calendar.HOUR_OF_DAY, 0);
+            calendar.set(Calendar.MINUTE, 0);
+            calendar.set(Calendar.SECOND, 0);
+            calendar.set(Calendar.MILLISECOND, 0);
+            long todayStart = calendar.getTimeInMillis();
+            long now = System.currentTimeMillis();
+
+            Map<String, UsageStats> statsMap = usageStatsManager.queryAndAggregateUsageStats(todayStart, now);
+            if (statsMap == null) {
+                return 0;
+            }
+
+            long totalUsageMs = 0;
+            for (String packageName : getMonitoredPackages()) {
+                UsageStats stats = statsMap.get(packageName);
+                if (stats != null) {
+                    totalUsageMs += stats.getTotalTimeInForeground();
+                }
+            }
+
+            return (int) (totalUsageMs / 60000);
+        } catch (Exception e) {
+            return -1;
+        }
+    }
+
+    private List<String> getMonitoredPackages() {
+        List<String> packages = new ArrayList<>();
+
+        if (preferenceManager.isAppMonitored(Constants.PREF_MONITOR_DOUYIN)) {
+            packages.addAll(Constants.DOUYIN_PACKAGES);
+        }
+        if (preferenceManager.isAppMonitored(Constants.PREF_MONITOR_KUAISHOU)) {
+            packages.addAll(Constants.KUAISHOU_PACKAGES);
+        }
+        if (preferenceManager.isAppMonitored(Constants.PREF_MONITOR_XIAOHONGSHU)) {
+            packages.addAll(Constants.XIAOHONGSHU_PACKAGES);
+        }
+        if (preferenceManager.isAppMonitored(Constants.PREF_MONITOR_WECHAT)) {
+            packages.addAll(Constants.WECHAT_PACKAGES);
+        }
+
+        return packages;
     }
 
     private void updatePermissionStatus() {
