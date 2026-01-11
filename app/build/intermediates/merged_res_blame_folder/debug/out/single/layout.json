@@ -1,0 +1,10 @@
+[
+    {
+        "merged": "com.screentime.guardian.app-mergeDebugResources-38:/layout/overlay_reminder.xml",
+        "source": "com.screentime.guardian.app-main-41:/layout/overlay_reminder.xml"
+    },
+    {
+        "merged": "com.screentime.guardian.app-mergeDebugResources-38:/layout/activity_main.xml",
+        "source": "com.screentime.guardian.app-main-41:/layout/activity_main.xml"
+    }
+]

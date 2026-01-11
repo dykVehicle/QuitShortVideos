@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">屏幕卫士</string>
+    <string name="app_description">帮助您戒断短视频瘾，合理使用手机</string>
+    
+    <!-- 主界面 -->
+    <string name="monitoring_status">监控状态</string>
+    <string name="start_monitoring">开启监控</string>
+    <string name="stop_monitoring">停止监控</string>
+    <string name="monitoring_active">监控中</string>
+    <string name="monitoring_inactive">未开启</string>
+    
+    <!-- 设置 -->
+    <string name="settings">设置</string>
+    <string name="time_limit">时间限制（分钟）</string>
+    <string name="time_limit_hint">输入时间限制</string>
+    <string name="default_time_limit">20</string>
+    
+    <!-- 监控的应用 -->
+    <string name="monitored_apps">监控的应用</string>
+    <string name="douyin">抖音</string>
+    <string name="kuaishou">快手</string>
+    <string name="xiaohongshu">小红书</string>
+    <string name="wechat_video">微信视频号</string>
+    
+    <!-- 权限相关 -->
+    <string name="permission_usage_stats">使用情况访问权限</string>
+    <string name="permission_overlay">悬浮窗权限</string>
+    <string name="permission_notification">通知权限</string>
+    <string name="grant_permission">授权</string>
+    <string name="permission_required">需要权限才能正常工作</string>
+    
+    <!-- 提醒弹窗 -->
+    <string name="time_exceeded_title">休息一下！</string>
+    <string name="time_exceeded_message">您已经刷了 %1$d 分钟短视频了，该休息一下眼睛了！</string>
+    <string name="continue_anyway">继续使用</string>
+    <string name="take_break">好的，休息</string>
+    
+    <!-- 通知 -->
+    <string name="notification_channel_name">屏幕监控</string>
+    <string name="notification_channel_description">短视频使用时间监控通知</string>
+    <string name="notification_title">屏幕卫士运行中</string>
+    <string name="notification_text">正在监控短视频应用使用时间</string>
+    
+    <!-- 今日统计 -->
+    <string name="today_stats">今日使用统计</string>
+    <string name="total_time">总使用时间</string>
+    <string name="minutes">分钟</string>
+    <string name="hours">小时</string>
+    <string name="reminders_today">今日提醒次数</string>
+    <string name="times">次</string>
+</resources>
