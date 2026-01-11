@@ -1,0 +1,12 @@
+<resources>
+    <string name="app_name">戒断短视频</string>
+    <string name="accessibility_service_description">监控短视频应用的使用时长，并在超时后提醒休息。</string>
+    <string name="welcome_text">请开启以下权限以开始监控：</string>
+    <string name="btn_accessibility">开启无障碍服务 (必须)</string>
+    <string name="btn_overlay">开启悬浮窗权限 (必须)</string>
+    <string name="permission_granted">已授权</string>
+    <string name="permission_denied">未授权</string>
+    <string name="rest_title">已经看了很久了</string>
+    <string name="rest_message">为了你的眼睛和健康，请休息一下吧。\n\n已连续观看超过20分钟。</string>
+    <string name="btn_close_app">关闭应用</string>
+</resources>
