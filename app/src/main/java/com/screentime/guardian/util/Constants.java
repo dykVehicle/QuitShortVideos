@@ -18,6 +18,16 @@ public class Constants {
     public static final String PREF_LAST_DATE = "last_date";
     public static final String PREF_LAST_REMINDER_TIME = "last_reminder_time";
     
+    // 各平台使用时长偏好设置键
+    public static final String PREF_USAGE_DOUYIN = "usage_douyin";
+    public static final String PREF_USAGE_KUAISHOU = "usage_kuaishou";
+    public static final String PREF_USAGE_XIAOHONGSHU = "usage_xiaohongshu";
+    public static final String PREF_USAGE_WECHAT = "usage_wechat";
+    
+    // 广播动作
+    public static final String ACTION_RESET_TIMER = "com.screentime.guardian.ACTION_RESET_TIMER";
+    public static final String ACTION_REMINDER_DISMISSED = "com.screentime.guardian.ACTION_REMINDER_DISMISSED";
+    
     // 默认时间限制（分钟）
     public static final int DEFAULT_TIME_LIMIT = 20;
     

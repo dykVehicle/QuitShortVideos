@@ -50,4 +50,8 @@
     <string name="hours">小时</string>
     <string name="reminders_today">今日提醒次数</string>
     <string name="times">次</string>
+    
+    <!-- 使用时长显示 -->
+    <string name="usage_time_default">今日: 0 分钟</string>
+    <string name="usage_time_format">今日: %1$d 分钟</string>
 </resources>

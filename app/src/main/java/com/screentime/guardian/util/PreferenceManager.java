@@ -90,7 +90,75 @@ public class PreferenceManager {
                 .putString(Constants.PREF_LAST_DATE, today)
                 .putInt(Constants.PREF_TODAY_USAGE_TIME, 0)
                 .putInt(Constants.PREF_TODAY_REMINDER_COUNT, 0)
+                .putInt(Constants.PREF_USAGE_DOUYIN, 0)
+                .putInt(Constants.PREF_USAGE_KUAISHOU, 0)
+                .putInt(Constants.PREF_USAGE_XIAOHONGSHU, 0)
+                .putInt(Constants.PREF_USAGE_WECHAT, 0)
                 .apply();
         }
+    }
+    
+    /**
+     * 获取抖音今日使用时长（分钟）
+     */
+    public int getDouyinUsageTime() {
+        checkAndResetDate();
+        return prefs.getInt(Constants.PREF_USAGE_DOUYIN, 0);
+    }
+    
+    /**
+     * 设置抖音今日使用时长（分钟）
+     */
+    public void setDouyinUsageTime(int minutes) {
+        checkAndResetDate();
+        prefs.edit().putInt(Constants.PREF_USAGE_DOUYIN, minutes).apply();
+    }
+    
+    /**
+     * 获取快手今日使用时长（分钟）
+     */
+    public int getKuaishouUsageTime() {
+        checkAndResetDate();
+        return prefs.getInt(Constants.PREF_USAGE_KUAISHOU, 0);
+    }
+    
+    /**
+     * 设置快手今日使用时长（分钟）
+     */
+    public void setKuaishouUsageTime(int minutes) {
+        checkAndResetDate();
+        prefs.edit().putInt(Constants.PREF_USAGE_KUAISHOU, minutes).apply();
+    }
+    
+    /**
+     * 获取小红书今日使用时长（分钟）
+     */
+    public int getXiaohongshuUsageTime() {
+        checkAndResetDate();
+        return prefs.getInt(Constants.PREF_USAGE_XIAOHONGSHU, 0);
+    }
+    
+    /**
+     * 设置小红书今日使用时长（分钟）
+     */
+    public void setXiaohongshuUsageTime(int minutes) {
+        checkAndResetDate();
+        prefs.edit().putInt(Constants.PREF_USAGE_XIAOHONGSHU, minutes).apply();
+    }
+    
+    /**
+     * 获取微信今日使用时长（分钟）
+     */
+    public int getWechatUsageTime() {
+        checkAndResetDate();
+        return prefs.getInt(Constants.PREF_USAGE_WECHAT, 0);
+    }
+    
+    /**
+     * 设置微信今日使用时长（分钟）
+     */
+    public void setWechatUsageTime(int minutes) {
+        checkAndResetDate();
+        prefs.edit().putInt(Constants.PREF_USAGE_WECHAT, minutes).apply();
     }
 }

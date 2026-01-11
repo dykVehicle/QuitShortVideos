@@ -44,6 +44,11 @@ public class MainActivity extends AppCompatActivity {
     private MaterialSwitch switchXiaohongshu;
     private MaterialSwitch switchWechat;
     
+    private TextView douyinUsageTime;
+    private TextView kuaishouUsageTime;
+    private TextView xiaohongshuUsageTime;
+    private TextView wechatUsageTime;
+    
     private ImageView usagePermissionStatus;
     private ImageView overlayPermissionStatus;
     
@@ -105,6 +110,11 @@ public class MainActivity extends AppCompatActivity {
         switchKuaishou = findViewById(R.id.switchKuaishou);
         switchXiaohongshu = findViewById(R.id.switchXiaohongshu);
         switchWechat = findViewById(R.id.switchWechat);
+        
+        douyinUsageTime = findViewById(R.id.douyinUsageTime);
+        kuaishouUsageTime = findViewById(R.id.kuaishouUsageTime);
+        xiaohongshuUsageTime = findViewById(R.id.xiaohongshuUsageTime);
+        wechatUsageTime = findViewById(R.id.wechatUsageTime);
         
         usagePermissionStatus = findViewById(R.id.usagePermissionStatus);
         overlayPermissionStatus = findViewById(R.id.overlayPermissionStatus);
@@ -204,6 +214,90 @@ public class MainActivity extends AppCompatActivity {
         
         totalTimeValue.setText(String.valueOf(totalMinutes));
         reminderCountValue.setText(String.valueOf(reminderCount));
+        
+        // 更新各平台使用时长
+        updatePlatformUsageStats();
+    }
+    
+    /**
+     * 更新各平台使用时长显示
+     */
+    private void updatePlatformUsageStats() {
+        if (!hasUsageStatsPermission()) {
+            return;
+        }
+        
+        try {
+            UsageStatsManager usageStatsManager = (UsageStatsManager) getSystemService(Context.USAGE_STATS_SERVICE);
+            if (usageStatsManager == null) {
+                return;
+            }
+            
+            // 获取今天的开始时间
+            Calendar calendar = Calendar.getInstance();
+            calendar.set(Calendar.HOUR_OF_DAY, 0);
+            calendar.set(Calendar.MINUTE, 0);
+            calendar.set(Calendar.SECOND, 0);
+            calendar.set(Calendar.MILLISECOND, 0);
+            long todayStart = calendar.getTimeInMillis();
+            long now = System.currentTimeMillis();
+            
+            Map<String, UsageStats> statsMap = usageStatsManager.queryAndAggregateUsageStats(todayStart, now);
+            if (statsMap == null) {
+                return;
+            }
+            
+            // 抖音使用时长
+            long douyinUsageMs = 0;
+            for (String packageName : Constants.DOUYIN_PACKAGES) {
+                UsageStats stats = statsMap.get(packageName);
+                if (stats != null) {
+                    douyinUsageMs += stats.getTotalTimeInForeground();
+                }
+            }
+            int douyinMinutes = (int) (douyinUsageMs / 60000);
+            preferenceManager.setDouyinUsageTime(douyinMinutes);
+            douyinUsageTime.setText(String.format(getString(R.string.usage_time_format), douyinMinutes));
+            
+            // 快手使用时长
+            long kuaishouUsageMs = 0;
+            for (String packageName : Constants.KUAISHOU_PACKAGES) {
+                UsageStats stats = statsMap.get(packageName);
+                if (stats != null) {
+                    kuaishouUsageMs += stats.getTotalTimeInForeground();
+                }
+            }
+            int kuaishouMinutes = (int) (kuaishouUsageMs / 60000);
+            preferenceManager.setKuaishouUsageTime(kuaishouMinutes);
+            kuaishouUsageTime.setText(String.format(getString(R.string.usage_time_format), kuaishouMinutes));
+            
+            // 小红书使用时长
+            long xiaohongshuUsageMs = 0;
+            for (String packageName : Constants.XIAOHONGSHU_PACKAGES) {
+                UsageStats stats = statsMap.get(packageName);
+                if (stats != null) {
+                    xiaohongshuUsageMs += stats.getTotalTimeInForeground();
+                }
+            }
+            int xiaohongshuMinutes = (int) (xiaohongshuUsageMs / 60000);
+            preferenceManager.setXiaohongshuUsageTime(xiaohongshuMinutes);
+            xiaohongshuUsageTime.setText(String.format(getString(R.string.usage_time_format), xiaohongshuMinutes));
+            
+            // 微信使用时长
+            long wechatUsageMs = 0;
+            for (String packageName : Constants.WECHAT_PACKAGES) {
+                UsageStats stats = statsMap.get(packageName);
+                if (stats != null) {
+                    wechatUsageMs += stats.getTotalTimeInForeground();
+                }
+            }
+            int wechatMinutes = (int) (wechatUsageMs / 60000);
+            preferenceManager.setWechatUsageTime(wechatMinutes);
+            wechatUsageTime.setText(String.format(getString(R.string.usage_time_format), wechatMinutes));
+            
+        } catch (Exception e) {
+            // 忽略错误
+        }
     }
 
     /**
