@@ -3,10 +3,11 @@ package com.screentime.guardian;
 import android.app.AppOpsManager;
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.provider.Settings;
 import android.view.View;
 import android.widget.ImageView;
@@ -40,6 +41,9 @@ public class MainActivity extends AppCompatActivity {
     private ImageView overlayPermissionStatus;
     
     private PreferenceManager preferenceManager;
+    
+    private Handler refreshHandler;
+    private Runnable refreshRunnable;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,10 +51,20 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         
         preferenceManager = new PreferenceManager(this);
+        refreshHandler = new Handler(Looper.getMainLooper());
         
         initViews();
         setupListeners();
         loadSettings();
+        
+        // 定时刷新统计数据
+        refreshRunnable = new Runnable() {
+            @Override
+            public void run() {
+                updateStats();
+                refreshHandler.postDelayed(this, 5000); // 每5秒刷新
+            }
+        };
     }
 
     @Override
@@ -59,6 +73,16 @@ public class MainActivity extends AppCompatActivity {
         updatePermissionStatus();
         updateServiceStatus();
         updateStats();
+        
+        // 开始定时刷新
+        refreshHandler.post(refreshRunnable);
+    }
+    
+    @Override
+    protected void onPause() {
+        super.onPause();
+        // 停止定时刷新
+        refreshHandler.removeCallbacks(refreshRunnable);
     }
 
     private void initViews() {
@@ -99,7 +123,7 @@ public class MainActivity extends AppCompatActivity {
 
         timeLimitSlider.addOnChangeListener((slider, value, fromUser) -> {
             int minutes = (int) value;
-            timeLimitValue.setText(minutes + "分钟");
+            timeLimitValue.setText(formatTime(minutes));
             if (fromUser) {
                 preferenceManager.setTimeLimit(minutes);
             }
@@ -120,12 +144,33 @@ public class MainActivity extends AppCompatActivity {
     private void loadSettings() {
         int timeLimit = preferenceManager.getTimeLimit();
         timeLimitSlider.setValue(timeLimit);
-        timeLimitValue.setText(timeLimit + "分钟");
+        timeLimitValue.setText(formatTime(timeLimit));
 
         switchDouyin.setChecked(preferenceManager.isAppMonitored(Constants.PREF_MONITOR_DOUYIN));
         switchKuaishou.setChecked(preferenceManager.isAppMonitored(Constants.PREF_MONITOR_KUAISHOU));
         switchXiaohongshu.setChecked(preferenceManager.isAppMonitored(Constants.PREF_MONITOR_XIAOHONGSHU));
         switchWechat.setChecked(preferenceManager.isAppMonitored(Constants.PREF_MONITOR_WECHAT));
+    }
+    
+    /**
+     * 格式化时间显示
+     * @param minutes 分钟数
+     * @return 格式化的时间字符串
+     */
+    private String formatTime(int minutes) {
+        if (minutes == 0) {
+            return "关闭提醒";
+        } else if (minutes < 60) {
+            return minutes + "分钟";
+        } else {
+            int hours = minutes / 60;
+            int mins = minutes % 60;
+            if (mins == 0) {
+                return hours + "小时";
+            } else {
+                return hours + "小时" + mins + "分钟";
+            }
+        }
     }
 
     private void updateServiceStatus() {

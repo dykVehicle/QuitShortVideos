@@ -75,6 +75,7 @@ string take_break
 string time_exceeded_message
 string time_exceeded_title
 string time_limit
+string time_limit_desc
 string time_limit_hint
 string times
 string today_stats

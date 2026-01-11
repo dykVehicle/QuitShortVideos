@@ -12,9 +12,10 @@
     
     <!-- 设置 -->
     <string name="settings">设置</string>
-    <string name="time_limit">时间限制（分钟）</string>
+    <string name="time_limit">连续使用时间限制</string>
     <string name="time_limit_hint">输入时间限制</string>
     <string name="default_time_limit">20</string>
+    <string name="time_limit_desc">设置为0表示关闭提醒</string>
     
     <!-- 监控的应用 -->
     <string name="monitored_apps">监控的应用</string>

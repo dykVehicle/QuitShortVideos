@@ -142,17 +142,17 @@
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:valueFrom="5"
-                        android:valueTo="60"
+                        android:valueFrom="0"
+                        android:valueTo="600"
                         android:stepSize="5"
                         android:value="20" />
 
                     <TextView
                         android:id="@+id/timeLimitValue"
-                        android:layout_width="60dp"
+                        android:layout_width="100dp"
                         android:layout_height="wrap_content"
                         android:text="20分钟"
-                        android:textSize="16sp"
+                        android:textSize="14sp"
                         android:textColor="@color/primary"
                         android:textStyle="bold"
                         android:gravity="center" />

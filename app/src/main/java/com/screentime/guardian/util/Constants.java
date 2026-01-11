@@ -21,11 +21,14 @@ public class Constants {
     // 默认时间限制（分钟）
     public static final int DEFAULT_TIME_LIMIT = 20;
     
-    // 提醒冷却时间（毫秒）- 2分钟内不重复提醒
-    public static final long REMINDER_COOLDOWN = 2 * 60 * 1000;
+    // 最大时间限制（分钟）- 10小时
+    public static final int MAX_TIME_LIMIT = 600;
+    
+    // 提醒冷却时间（毫秒）- 1分钟内不重复提醒
+    public static final long REMINDER_COOLDOWN = 60 * 1000;
     
     // 监控间隔（毫秒）
-    public static final long MONITORING_INTERVAL = 5000; // 5秒
+    public static final long MONITORING_INTERVAL = 3000; // 3秒，更及时地检测
     
     // 短视频应用包名
     public static final String PACKAGE_DOUYIN = "com.ss.android.ugc.aweme"; // 抖音
