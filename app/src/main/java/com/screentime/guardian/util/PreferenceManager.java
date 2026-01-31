@@ -161,4 +161,18 @@ public class PreferenceManager {
         checkAndResetDate();
         prefs.edit().putInt(Constants.PREF_USAGE_WECHAT, minutes).apply();
     }
+    
+    /**
+     * 重置今日所有统计数据
+     */
+    public void resetTodayStats() {
+        prefs.edit()
+            .putInt(Constants.PREF_TODAY_USAGE_TIME, 0)
+            .putInt(Constants.PREF_TODAY_REMINDER_COUNT, 0)
+            .putInt(Constants.PREF_USAGE_DOUYIN, 0)
+            .putInt(Constants.PREF_USAGE_KUAISHOU, 0)
+            .putInt(Constants.PREF_USAGE_XIAOHONGSHU, 0)
+            .putInt(Constants.PREF_USAGE_WECHAT, 0)
+            .apply();
+    }
 }

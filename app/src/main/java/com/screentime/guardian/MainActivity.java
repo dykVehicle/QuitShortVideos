@@ -14,8 +14,10 @@ import android.provider.Settings;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Button;
 import android.widget.Toast;
 
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.android.material.materialswitch.MaterialSwitch;
@@ -51,6 +53,8 @@ public class MainActivity extends AppCompatActivity {
     
     private ImageView usagePermissionStatus;
     private ImageView overlayPermissionStatus;
+    
+    private Button btnResetStats;
     
     private PreferenceManager preferenceManager;
     
@@ -119,8 +123,29 @@ public class MainActivity extends AppCompatActivity {
         usagePermissionStatus = findViewById(R.id.usagePermissionStatus);
         overlayPermissionStatus = findViewById(R.id.overlayPermissionStatus);
         
+        btnResetStats = findViewById(R.id.btnResetStats);
+        
         findViewById(R.id.usagePermissionLayout).setOnClickListener(v -> requestUsageStatsPermission());
         findViewById(R.id.overlayPermissionLayout).setOnClickListener(v -> requestOverlayPermission());
+        
+        // 重置统计按钮点击事件
+        btnResetStats.setOnClickListener(v -> showResetConfirmDialog());
+    }
+    
+    /**
+     * 显示重置确认对话框
+     */
+    private void showResetConfirmDialog() {
+        new AlertDialog.Builder(this)
+            .setTitle(R.string.reset_stats)
+            .setMessage(R.string.reset_stats_confirm)
+            .setPositiveButton(R.string.confirm, (dialog, which) -> {
+                preferenceManager.resetTodayStats();
+                updateStats();
+                Toast.makeText(this, R.string.reset_stats_success, Toast.LENGTH_SHORT).show();
+            })
+            .setNegativeButton(R.string.cancel, null)
+            .show();
     }
 
     private void setupListeners() {

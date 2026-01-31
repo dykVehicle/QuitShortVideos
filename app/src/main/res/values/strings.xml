@@ -54,4 +54,11 @@
     <!-- 使用时长显示 -->
     <string name="usage_time_default">今日: 0 分钟</string>
     <string name="usage_time_format">今日: %1$d 分钟</string>
+    
+    <!-- 重置统计 -->
+    <string name="reset_stats">重置今日统计</string>
+    <string name="reset_stats_confirm">确定要重置今日所有使用统计数据吗？</string>
+    <string name="reset_stats_success">统计数据已重置</string>
+    <string name="cancel">取消</string>
+    <string name="confirm">确定</string>
 </resources>
